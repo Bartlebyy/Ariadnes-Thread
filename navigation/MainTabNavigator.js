@@ -4,8 +4,9 @@ import { createStackNavigator, createBottomTabNavigator } from 'react-navigation
 
 import TabBarIcon from '../components/TabBarIcon';
 import HomeScreen from '../screens/HomeScreen';
-import LinksScreen from '../screens/LinksScreen';
-import SettingsScreen from '../screens/SettingsScreen';
+import AddMazeScreen from '../screens/AddMazeScreen';
+import GalleryScreen from '../screens/GalleryScreen';
+
 
 const HomeStack = createStackNavigator({
   Home: HomeScreen,
@@ -25,36 +26,40 @@ HomeStack.navigationOptions = {
   ),
 };
 
-const LinksStack = createStackNavigator({
-  Links: LinksScreen,
+const AddMazeStack = createStackNavigator({
+  AddMaze: AddMazeScreen,
 });
 
-LinksStack.navigationOptions = {
-  tabBarLabel: 'Links',
+AddMazeStack.navigationOptions = {
+  tabBarLabel: 'Add Maze',
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
-      name={Platform.OS === 'ios' ? `ios-link${focused ? '' : '-outline'}` : 'md-link'}
+      name={Platform.OS === 'ios'
+        ? `ios-camera${focused ? '' : '-outline'}`
+        : 'md-camera'}
     />
   ),
 };
 
-const SettingsStack = createStackNavigator({
-  Settings: SettingsScreen,
+const GalleryStack = createStackNavigator({
+  Gallery: GalleryScreen,
 });
 
-SettingsStack.navigationOptions = {
-  tabBarLabel: 'Settings',
+GalleryStack.navigationOptions = {
+  tabBarLabel: 'Gallery',
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
-      name={Platform.OS === 'ios' ? `ios-options${focused ? '' : '-outline'}` : 'md-options'}
+      name={Platform.OS === 'ios'
+        ? `ios-folder${focused ? '' : '-outline'}`
+        : 'md-folder'}
     />
   ),
 };
 
 export default createBottomTabNavigator({
   HomeStack,
-  LinksStack,
-  SettingsStack,
+  AddMazeStack,
+  GalleryStack,
 });
