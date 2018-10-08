@@ -1,6 +1,7 @@
 import React from 'react';
 import { Text, View, TouchableOpacity } from 'react-native';
 import { Camera, Permissions } from 'expo';
+import { withNavigationFocus } from 'react-navigation';
 
 export default class AddMazeScreen extends React.Component {
   static navigationOptions = {
@@ -8,6 +9,7 @@ export default class AddMazeScreen extends React.Component {
   };
 
   state = {
+    focusedScreen: true,
     hasCameraPermission: null
   };
 
@@ -16,50 +18,61 @@ export default class AddMazeScreen extends React.Component {
     this.setState({ hasCameraPermission: status === 'granted' });
   }
 
+  componentDidMount() {
+    const { navigation } = this.props;
+    navigation.addListener('willFocus', () =>
+      this.setState({ focusedScreen: true })
+    );
+    navigation.addListener('willBlur', () =>
+      this.setState({ focusedScreen: false })
+    );
+  }
+
   render() {
-    // console.log('render');
-    const { hasCameraPermission } = this.state;
+    const { hasCameraPermission, focusedScreen } = this.state;
     if (hasCameraPermission === null) {
-      // console.log('null camera permission');
       return <View />;
     } else if (hasCameraPermission === false) {
-      // console.log('false camera permission');
       return <Text>No access to camera</Text>;
+    } else if (focusedScreen){
+      return (this.cameraView());
     } else {
-      // console.log('Render correct view');
-      return (
-        <View style={{ flex: 1 }}>
-          <Camera
-            ref={ref => {
-              this.camera = ref;
-            }}
-            style={{ flex: 1 }}
-            type="Camera.Constants.Type.back"
-            >
-            <View
-              style={{
-                flex: 1,
-                backgroundColor: 'transparent',
-                flexDirection: 'row',
-              }}>
-              <TouchableOpacity
-                style={{
-                  flex: 0.2,
-                  alignSelf: 'flex-end',
-                  alignItems: 'center',
-                }}
-                onPress={() => {
-                  this.forceUpdate()
-                }}>
-                <Text
-                  style={{ fontSize: 18, marginBottom: 10, color: 'white' }}>
-                  {' '}Reload{' '}
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </Camera>
-        </View>
-      );
+      return <View />;
     }
+  }
+
+  cameraView() {
+    return (
+      <View style={{ flex: 1 }}>
+        <Camera
+          ref={ref => {
+            this.camera = ref;
+          }}
+          style={{ flex: 1 }}
+          type="Camera.Constants.Type.back"
+          >
+          <View
+            style={{
+              flex: 1,
+              backgroundColor: 'transparent',
+              flexDirection: 'row',
+            }}>
+            {/* <TouchableOpacity
+              style={{
+                flex: 0.2,
+                alignSelf: 'flex-end',
+                alignItems: 'center',
+              }}
+              onPress={() => {
+              }}>
+              <Text
+                style={{ fontSize: 18, marginBottom: 10, color: 'white' }}>
+                {' '}Reload{' '}
+              </Text>
+            </TouchableOpacity> */}
+          </View>
+        </Camera>
+      </View>
+    );
   }
 }
